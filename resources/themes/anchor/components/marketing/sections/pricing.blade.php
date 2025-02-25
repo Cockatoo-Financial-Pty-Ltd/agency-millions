@@ -89,5 +89,32 @@
         </div>
     </div>
 
-    <p class="w-full mt-0 mb-8 text-center text-zinc-500 sm:my-10">All plans are fully configurable in the Admin Area.</p>
+    <div class="mt-16 text-center">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
+                Ready to Scale Your Agency?
+            </h2>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                Join hundreds of successful agency owners who have transformed their business with Agency Millions.
+            </p>
+            <div class="mt-8 flex justify-center">
+                <div class="inline-flex rounded-md shadow">
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        Get Started Today
+                        <svg class="ml-2 -mr-1 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="ml-3 inline-flex">
+                    <a href="#" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200">
+                        Book a Demo
+                    </a>
+                </div>
+            </div>
+            <p class="mt-6 text-sm text-gray-500 dark:text-gray-400">
+                14-day money-back guarantee • No credit card required
+            </p>
+        </div>
+    </div>
 </section>

@@ -4,11 +4,35 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use Wave\User as WaveUser;
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\LessonCompletion;
 use Illuminate\Notifications\Notifiable;
 use Wave\Traits\HasProfileKeyValues;
 
 class User extends WaveUser
 {
+    public function completedLessons()
+    {
+        return $this->hasMany(LessonCompletion::class);
+    }
+
+    public function getCourseProgress(Course $course)
+    {
+        $totalLessons = $course->lessons()->count();
+        $completedLessons = $this->completedLessons()
+            ->whereHas('lesson', function ($query) use ($course) {
+                $query->where('course_id', $course->id);
+            })
+            ->count();
+
+        return [
+            'total' => $totalLessons,
+            'completed' => $completedLessons,
+            'percentage' => $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0
+        ];
+    }
+
     use Notifiable, HasProfileKeyValues;
 
     public $guard_name = 'web';

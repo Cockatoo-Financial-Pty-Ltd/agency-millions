@@ -10,34 +10,36 @@
     
     {{-- Sidebar --}} 
     <div :class="{ '-translate-x-full': !sidebarOpen }"
-        class="fixed top-0 left-0 flex items-stretch -translate-x-full overflow-hidden lg:translate-x-0 z-50 h-dvh md:h-screen transition-[width,transform] duration-150 ease-out bg-zinc-50 dark:bg-zinc-900 w-64 group @if(config('wave.dev_bar')){{ 'pb-10' }}@endif">  
-        <div class="flex flex-col justify-between w-full overflow-auto md:h-full h-svh pt-4 pb-2.5">
+        class="fixed top-0 left-0 flex items-stretch -translate-x-full overflow-hidden lg:translate-x-0 z-50 h-dvh md:h-screen transition-[width,transform] duration-150 ease-out bg-white dark:bg-zinc-900 w-72 border-r border-gray-200 dark:border-zinc-800 group @if(config('wave.dev_bar')){{ 'pb-10' }}@endif">  
+        <div class="flex flex-col justify-between w-full overflow-auto md:h-full h-svh">
             <div class="relative flex flex-col">
                 <button x-on:click="sidebarOpen=false" class="flex items-center justify-center flex-shrink-0 w-10 h-10 ml-4 rounded-md lg:hidden text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 dark:hover:bg-zinc-700/70 hover:bg-gray-200/70">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
                 </button>
 
-                <div class="flex items-center px-5 space-x-2">
-                    <a href="/" class="flex justify-center items-center py-4 pl-0.5 space-x-1 font-bold text-zinc-900">
+                <div class="flex items-center px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
+                    <a href="/" class="flex justify-start items-center space-x-1 font-bold text-zinc-900 dark:text-white">
                         <x-logo class="w-auto h-7" />
                     </a>
                 </div>
-                <div class="flex items-center px-4 pt-1 pb-3">
+                <div class="flex items-center px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
                     <div class="relative flex items-center w-full h-full rounded-lg">
                         <x-phosphor-magnifying-glass class="absolute left-0 w-5 h-5 ml-2 text-gray-400 -translate-y-px" />
                         <input type="text" class="w-full py-2 pl-8 text-sm border rounded-lg bg-zinc-200/70 focus:bg-white duration-50 dark:bg-zinc-950 ease border-zinc-200 dark:border-zinc-700/70 dark:ring-zinc-700/70 focus:ring dark:text-zinc-200 dark:focus:ring-zinc-700/70 dark:focus:border-zinc-700 focus:ring-zinc-200 focus:border-zinc-300 dark:placeholder-zinc-400" placeholder="Search">
                     </div>
                 </div>
 
-                <div class="flex flex-col justify-start items-center px-4 space-y-1.5 w-full h-full text-slate-600 dark:text-zinc-400">
+                <div class="flex flex-col justify-start items-start px-4 py-4 space-y-1 w-full h-full text-gray-700 dark:text-zinc-300">
+                    <div class="px-2 mb-2 text-xs font-semibold uppercase text-gray-500 dark:text-zinc-400">Course Content</div>
                     <x-app.sidebar-link href="/dashboard" icon="phosphor-house" :active="Request::is('dashboard')">Dashboard</x-app.sidebar-link>
-                    <x-app.sidebar-dropdown text="Projects" icon="phosphor-stack" id="projects_dropdown" :active="(Request::is('projects'))" :open="(Request::is('project_a') || Request::is('project_b') || Request::is('project_c')) ? '1' : '0'">
-                        <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-cube" :active="(Request::is('project_a'))">Project A</x-app.sidebar-link>
-                        <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-cube" :active="(Request::is('project_b'))">Project B</x-app.sidebar-link>
-                        <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-cube" :active="(Request::is('project_c'))">Project C</x-app.sidebar-link>
-                    </x-app.sidebar-dropdown>
-                    <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-pencil-line" active="false">Stories</x-app.sidebar-link>
-                    <x-app.sidebar-link  onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-users" active="false">Users</x-app.sidebar-link>
+                    @foreach(\App\Models\Course::where('is_published', true)->orderBy('order')->get() as $course)
+                        <x-app.sidebar-dropdown text="{{ $course->title }}" icon="phosphor-graduation-cap" id="course_{{ $course->id }}" :active="Request::is('courses/' . $course->slug . '*')" :open="Request::is('courses/' . $course->slug . '*') ? '1' : '0'">
+                            @foreach($course->lessons()->orderBy('order')->get() as $lesson)
+                                <x-app.sidebar-link href="{{ route('courses.lessons.show', [$course->slug, $lesson->slug]) }}" icon="phosphor-book-open" :active="Request::is('courses/' . $course->slug . '/' . $lesson->slug)">{{ $lesson->title }}</x-app.sidebar-link>
+                            @endforeach
+                        </x-app.sidebar-dropdown>
+                    @endforeach
+
                 </div>
             </div>
 

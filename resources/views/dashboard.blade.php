@@ -1,9 +1,3 @@
-<?php
-    use function Laravel\Folio\{middleware, name};
-    middleware('auth');
-    name('dashboard');
-?>
-
 <x-layouts.app>
     <x-app.container x-data class="lg:space-y-6" x-cloak>
         <x-app.heading
@@ -40,6 +34,6 @@
                     </div>
                 </div>
             @endforeach
-        </div>
+                    </div>
     </x-app.container>
 </x-layouts.app>
